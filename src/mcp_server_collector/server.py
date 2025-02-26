@@ -45,7 +45,7 @@ async def handle_list_tools() -> list[types.Tool]:
         ),
         types.Tool(
             name="submit-mcp-server",
-            description="Submit MCP Server to MCP Servers Directory like mcp.so",
+            description="Submit MCP Server to MCP Servers Directory like mcp.ad",
             inputSchema={
                 "type": "object",
                 "properties": {

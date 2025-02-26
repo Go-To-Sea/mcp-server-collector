@@ -20,7 +20,7 @@ The server implements 3 tools:
   - Takes "url" as required string argument
 - extract-mcp-servers-from-content: Extracts MCP Servers from given content.
   - Takes "content" as required string argument
-- submit-mcp-server: Submits a MCP Server to the MCP Server Directory like mcp.so.
+- submit-mcp-server: Submits a MCP Server to the MCP Server Directory like mcp.ad.
   - Takes "url" as required string argument and "avatar_url" as optional string argument
 
 ## Configuration
@@ -32,7 +32,7 @@ OPENAI_API_KEY="sk-xxx"
 OPENAI_BASE_URL="https://api.openai.com/v1"
 OPENAI_MODEL="gpt-4o-mini"
 
-MCP_SERVER_SUBMIT_URL="https://mcp.so/api/submit-project"
+MCP_SERVER_SUBMIT_URL="https://mcp.ad/api/submit-project"
 ```
 
 ## Quickstart
@@ -64,7 +64,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
         "OPENAI_API_KEY": "sk-xxx",
         "OPENAI_BASE_URL": "https://api.openai.com/v1",
         "OPENAI_MODEL": "gpt-4o-mini",
-        "MCP_SERVER_SUBMIT_URL": "https://mcp.so/api/submit-project"
+        "MCP_SERVER_SUBMIT_URL": "https://mcp.ad/api/submit-project"
       }
     }
   }
@@ -88,7 +88,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
         "OPENAI_API_KEY": "sk-xxx",
         "OPENAI_BASE_URL": "https://api.openai.com/v1",
         "OPENAI_MODEL": "gpt-4o-mini",
-        "MCP_SERVER_SUBMIT_URL": "https://mcp.so/api/submit-project"
+        "MCP_SERVER_SUBMIT_URL": "https://mcp.ad/api/submit-project"
       }
     }
   }
@@ -147,4 +147,4 @@ Upon launching, the Inspector will display a URL that you can access in your bro
 ## About the author
 
 - [idoubi](https://bento.me/idoubi)
-- [mcp.so](https://mcp.so)
+- [mcp.ad](https://mcp.ad)
