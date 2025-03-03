@@ -17,7 +17,7 @@ START_YEAR = current_year - 10  # 10 年前
 END_YEAR = current_year         # 当前年
 
 
-def get_mcp_servers():
+def get_mcp_client():
     all_results = []
     headers = {"Accept": "application/vnd.github.v3+json"}
 
@@ -42,7 +42,7 @@ def get_mcp_servers():
             page = 1
             while True:
                 # 构造 GitHub API 查询 URL
-                url = f"https://api.github.com/search/repositories?q=MCP+server+created:{start_date}..{end_date}&per_page=100&page={page}"
+                url = f"https://api.github.com/search/repositories?q=MCP+client+created:{start_date}..{end_date}&per_page=100&page={page}"
                 response = requests.get(url, headers=headers)
 
                 # 处理速率限制
@@ -76,7 +76,7 @@ def get_mcp_servers():
                         "url": repo["html_url"],
                         "author_name": repo["owner"]["login"],
                         "author_avatar_url": repo["owner"]["avatar_url"],
-                        "type": "server"
+                        "type": "client"
                     }
                     if repo_data not in all_results:
                         all_results.append(repo_data)
