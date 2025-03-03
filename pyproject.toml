@@ -1,6 +1,6 @@
 [project]
 name = "mcp-server-collector"
-version = "0.1.0"
+version = "0.0.1"
 description = "A MCP Server used to collect MCP Servers over the internet."
 readme = "README.md"
 requires-python = ">=3.12"
