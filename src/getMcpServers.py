@@ -72,7 +72,7 @@ def get_mcp_servers():
                     repo_data = {
                         "name": repo["name"],
                         "title": repo["name"].replace("-", " ").title(),
-                        "description": repo["description"] if repo["description"] else "暂无描述",
+                        "description": repo["description"] if repo["description"] else "",
                         "url": repo["html_url"],
                         "author_name": repo["owner"]["login"],
                         "author_avatar_url": repo["owner"]["avatar_url"],
