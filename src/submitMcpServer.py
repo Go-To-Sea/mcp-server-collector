@@ -5,6 +5,7 @@ import aiohttp
 from dotenv import load_dotenv
 
 from getMcpServers import get_mcp_servers  # 确保 getMcpServers.py 存在
+from src.getMcpInfos import get_mcp
 
 # 加载环境变量
 load_dotenv()
@@ -39,7 +40,7 @@ async def main():
     """
     获取 MCP 服务器数据，并按顺序逐个提交到 API。
     """
-    mcp_servers = get_mcp_servers()  # 获取 MCP 服务器列表
+    mcp_servers = get_mcp("server")  # 获取 MCP 服务器列表
 
     if not mcp_servers:
         print("未找到 MCP 服务器，任务终止。")

@@ -108,7 +108,7 @@ def extract_tags_from_text(type, text):
     return tags
 
 
-def get_mcp_servers(type):
+def get_mcp(type):
     all_results = []
     headers = {"Accept": "application/vnd.github.v3+json"}
 

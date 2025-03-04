@@ -14,32 +14,28 @@ def main():
     logging.info("开始抓取MCP.SO网站数据")
     
     crawler = MCPCrawler()
-    db = MCPDatabase()
+    db = None if args.no_import else MCPDatabase()
+    
+    total_processed = 0
     
     # 抓取服务器数据
     if not args.client_only:
         logging.info("开始抓取MCP Server数据")
-        servers = crawler.get_server_list()
-        logging.info(f"共抓取 {len(servers)} 个MCP Server")
-        for server in servers:
-            db.add_project(server)
+        server_count = crawler.get_server_list(db)
+        logging.info(f"完成抓取 {server_count} 个MCP Server")
+        total_processed += server_count
     
     # 抓取客户端数据
     if not args.server_only:
         logging.info("开始抓取MCP Client数据")
-        clients = crawler.get_client_list()
-        logging.info(f"共抓取 {len(clients)} 个MCP Client")
-        for client in clients:
-            db.add_project(client)
+        client_count = crawler.get_client_list(db)
+        logging.info(f"完成抓取 {client_count} 个MCP Client")
+        total_processed += client_count
     
-    # 导入数据到数据库
-    if not args.no_import:
-        logging.info("正在将数据导入到Supabase...")
-        inserted, updated, failed = db.import_to_supabase()
-        logging.info(f"数据导入完成: 新插入 {inserted} 条，更新 {updated} 条，失败 {failed} 条")
+    logging.info(f"数据抓取完成，共处理 {total_processed} 个项目")
     
-    # 如果指定了导出SQL文件，则同时生成SQL
-    if args.export_sql:
+    # 如果指定了导出SQL文件，则生成SQL
+    if args.export_sql and db:
         logging.info(f"正在生成SQL文件: {args.export_sql}")
         try:
             with open(args.export_sql, 'w', encoding='utf-8') as f:
