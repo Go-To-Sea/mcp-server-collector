@@ -1,4 +1,6 @@
 import base64
+import os
+
 import markdown
 import requests
 import time
@@ -7,8 +9,7 @@ from supabase import create_client, Client
 # Supabase 配置
 SUPABASE_URL = "https://stfkxmxxxvrprkozmywi.supabase.co"
 SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0Zmt4bXh4eHZycHJrb3pteXdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA0OTUwMTksImV4cCI6MjA1NjA3MTAxOX0.c_Sz6sHuPteG9-yIAWFg8x5bwOWGWcoWfbco2n4LK9Y"
-GITHUB_TOKEN = ""  # 请替换为你的 GitHub 个人访问令牌
-
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")  # GitHub 访问令牌
 # 创建 Supabase 客户端
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
 

@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 # 加载 .env 文件
 load_dotenv()
-GITHUB_TOKEN = ""  # 请替换为你的 GitHub 个人访问令牌
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")  # GitHub 访问令牌
 USE_PROXY = False  # 是否使用代理
 REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT", "10"))  # 请求超时时间(秒)
 MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))  # 最大重试次数
