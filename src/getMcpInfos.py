@@ -1,3 +1,6 @@
+import base64
+
+import markdown
 import requests
 import os
 import time
@@ -9,7 +12,7 @@ from dotenv import load_dotenv
 
 # 加载 .env 文件
 load_dotenv()
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")  # GitHub 访问令牌
+GITHUB_TOKEN = ""  # 请替换为你的 GitHub 个人访问令牌
 USE_PROXY = False  # 是否使用代理
 REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT", "10"))  # 请求超时时间(秒)
 MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))  # 最大重试次数
@@ -19,7 +22,7 @@ current_year = datetime.datetime.now().year
 current_month = datetime.datetime.now().month
 
 # 设置查询的年份范围（最近 10 年）
-START_YEAR = current_year - 10  # 10 年前
+START_YEAR = current_year - 1  # 10 年前
 END_YEAR = current_year         # 当前年
 
 
@@ -54,35 +57,33 @@ def request_with_retry(url, headers, proxies=None, max_retries=MAX_RETRIES, time
     return None
 
 
-def get_readme_content(repo_full_name):
-    """获取仓库的README内容"""
-    headers = {"Accept": "application/vnd.github.v3+json"}
-    if GITHUB_TOKEN:
-        headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
-    
-    # 设置代理
-    proxies = None
-    if not USE_PROXY:
-        proxies = {"http": None, "https": None}  # 禁用代理
-    
-    # 尝试获取不同格式的README文件
-    readme_formats = ['README.md', 'README', 'readme.md', 'Readme.md']
-    for readme_format in readme_formats:
-        url = f"https://api.github.com/repos/{repo_full_name}/contents/{readme_format}"
-        try:
-            response = request_with_retry(url, headers, proxies)
-            
-            if response and response.status_code == 200:
-                data = response.json()
-                if 'content' in data and data.get('encoding') == 'base64':
-                    import base64
-                    content = base64.b64decode(data['content']).decode('utf-8', errors='replace')
-                    return content
-        except Exception as e:
-            print(f"❌ 获取 {repo_full_name} 的 {readme_format} 时出错: {e}")
-            continue
-    
-    return ""  # 如果没有找到README，返回空字符串
+def get_readme_content(url):
+    try:
+        # 从 URL 中获取 owner 和 repo_name
+        owner, repo_name = url.split('/')[-2], url.split('/')[-1]
+
+        # 构建 API 请求 URL
+        api_url = f"https://api.github.com/repos/{owner}/{repo_name}/readme"
+
+        # 设置认证头
+        headers = {
+            "Authorization": f"token {GITHUB_TOKEN}"
+        }
+
+        # 发送请求获取 README 文件
+        response = requests.get(api_url, headers=headers)
+
+        if response.status_code == 200:
+            # GitHub 返回的内容是 base64 编码的，需要解码
+            readme_content = response.json().get('content')
+            # 解码并返回
+            return readme_content
+        else:
+            print(f"无法获取 README 文件: {response.status_code} for {url}")
+            return None
+    except Exception as e:
+        print(f"无法获取 README 文件: {e}")
+        return None
 
 
 def extract_tags_from_text(type, text):
@@ -185,7 +186,15 @@ def get_mcp(type):
                 for repo in repositories:
                     try:
                         # 获取README内容
-                        readme_content = get_readme_content(repo["full_name"])
+                        readme_content = get_readme_content(repo["html_url"])
+
+                        # 解码 Base64 字符串
+                        decoded_bytes = base64.b64decode(readme_content)
+                        decoded_str = decoded_bytes.decode('utf-8')
+                        print(f"正在处理 URL: {url}")
+
+                        # 使用 markdown 库将 Markdown 转换为 HTML
+                        html_content = markdown.markdown(decoded_str)
                         
                         # 初始化仓库数据
                         repo_data = {
@@ -204,7 +213,7 @@ def get_mcp(type):
                             "is_featured": True,  # 默认非特色
                             "sort": 0,  # 默认排序
                             "target": "_self",  # 默认目标
-                            "content": readme_content,  # README内容
+                            "content": html_content,  # README内容
                             "img_url": ""  # 默认无图片URL
                         }
                         
@@ -267,5 +276,5 @@ def get_mcp(type):
 
 # 运行
 if __name__ == "__main__":
-    mcp_servers = get_mcp_servers('client')
+    mcp_servers = get_mcp('client')
     print(f"✅ 共获取 {len(mcp_servers)} 条数据")
