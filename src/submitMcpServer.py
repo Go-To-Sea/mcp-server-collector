@@ -4,7 +4,6 @@ import asyncio
 import aiohttp
 from dotenv import load_dotenv
 
-from getMcpServers import get_mcp_servers  # 确保 getMcpServers.py 存在
 from src.getMcpInfos import get_mcp
 
 # 加载环境变量

@@ -22,7 +22,7 @@ current_year = datetime.datetime.now().year
 current_month = datetime.datetime.now().month
 
 # 设置查询的年份范围（最近 10 年）
-START_YEAR = current_year - 1  # 10 年前
+START_YEAR = current_year - 0  # 10 年前
 END_YEAR = current_year         # 当前年
 
 
@@ -124,8 +124,8 @@ def get_mcp(type):
     # 倒序遍历每年每月（从最近的时间开始）
     for year in range(END_YEAR, START_YEAR - 1, -1):
         # 确定月份范围
-        month_start = 1
-        month_end = 12
+        month_start = 2
+        month_end = 4
         
         # 如果是当前年份，则只查询到当前月份
         if year == END_YEAR:
@@ -253,7 +253,7 @@ def get_mcp(type):
                         
                         if repo_data not in all_results:
                             if repo_data['content'] != '':
-                                print("111")
+                                print(repo_data['content'])
                             all_results.append(repo_data)
                             
                     except Exception as e:
@@ -276,5 +276,5 @@ def get_mcp(type):
 
 # 运行
 if __name__ == "__main__":
-    mcp_servers = get_mcp('client')
+    mcp_servers = get_mcp('server')
     print(f"✅ 共获取 {len(mcp_servers)} 条数据")
