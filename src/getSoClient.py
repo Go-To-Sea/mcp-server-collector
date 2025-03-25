@@ -98,7 +98,7 @@ async def main(type):
     async with aiohttp.ClientSession() as session:
         for link in all_github_links:
             result = await submit_mcp(session, {'url' : link,'type':type})
-            print(f"服务器 查询结果: {result}")
+            print(f"提交结果: {result}")
 
 
 # 运行主函数
