@@ -12,3 +12,4 @@ wheels/
 .vscode
 .vercel
 .idea
+.env
