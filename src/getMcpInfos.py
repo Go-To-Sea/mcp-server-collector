@@ -56,59 +56,6 @@ def request_with_retry(url, headers, proxies=None, max_retries=MAX_RETRIES, time
     
     return None
 
-
-def get_readme_content(url):
-    try:
-        # 从 URL 中获取 owner 和 repo_name
-        owner, repo_name = url.split('/')[-2], url.split('/')[-1]
-
-        # 构建 API 请求 URL
-        api_url = f"https://api.github.com/repos/{owner}/{repo_name}/readme"
-
-        # 设置认证头
-        headers = {
-            "Authorization": f"token {GITHUB_TOKEN}"
-        }
-
-        # 发送请求获取 README 文件
-        response = requests.get(api_url, headers=headers)
-
-        if response.status_code == 200:
-            # GitHub 返回的内容是 base64 编码的，需要解码
-            readme_content = response.json().get('content')
-            # 解码并返回
-            return readme_content
-        else:
-            print(f"无法获取 README 文件: {response.status_code} for {url}")
-            return None
-    except Exception as e:
-        print(f"无法获取 README 文件: {e}")
-        return None
-
-
-def extract_tags_from_text(type, text):
-    """从文本中提取关键词作为标签"""
-    if not text:
-        return []
-    
-    # 常见的 Minecraft 服务器相关关键词
-    keywords = [
-        "minecraft", type, "plugin", "mod", "mcp", "forge", "spigot",
-        "bukkit", "paper", "velocity", "proxy", "bungee", "waterfall", 
-        "fabric", "multiplayer", "smp", "gamemode", "survival", "creative",
-        "pvp", "pve", "economy", "permissions", "anti-cheat", "modpack"
-    ]
-    
-    tags = []
-    text_lower = text.lower()
-    
-    for keyword in keywords:
-        if keyword in text_lower:
-            tags.append(keyword)
-    
-    return tags
-
-
 def get_mcp(type):
     all_results = []
     headers = {"Accept": "application/vnd.github.v3+json"}
@@ -184,84 +131,9 @@ def get_mcp(type):
 
                 # 存储数据
                 for repo in repositories:
-                    try:
-                        # 获取README内容
-                        readme_content = get_readme_content(repo["html_url"])
+                    all_results.append(repo["html_url"])
 
-                        # 解码 Base64 字符串
-                        decoded_bytes = base64.b64decode(readme_content)
-                        decoded_str = decoded_bytes.decode('utf-8')
-                        print(f"正在处理 URL: {url}")
-
-                        # 使用 markdown 库将 Markdown 转换为 HTML
-                        html_content = markdown.markdown(decoded_str)
-                        
-                        # 初始化仓库数据
-                        repo_data = {
-                            "uuid": str(uuid.uuid4()),  # 生成唯一UUID
-                            "name": repo["name"],
-                            "title": repo["name"].replace("-", " ").title(),
-                            "url": repo["html_url"],
-                            "author_name": repo["owner"]["login"],
-                            "author_avatar_url": repo["owner"]["avatar_url"],
-                            "avatar_url": repo["owner"]["avatar_url"],  # 使用作者头像作为项目头像
-                            "type": type,
-                            "created_at": repo["created_at"],
-                            "updated_at": repo["updated_at"],
-                            "status": "created",  # 默认状态
-                            "category": "",  # 默认类别
-                            "is_featured": True,  # 默认非特色
-                            "sort": 0,  # 默认排序
-                            "target": "_self",  # 默认目标
-                            "content": html_content,  # README内容
-                            "img_url": ""  # 默认无图片URL
-                        }
-                        
-                        # 仅当有描述时添加描述字段
-                        if repo["description"]:
-                            repo_data["description"] = repo["description"]
-                        
-                        # 生成简短摘要 - 只有在有内容时才设置
-                        if repo["description"]:
-                            repo_data["summary"] = repo["description"]
-                        
-                        # 动态获取标签
-                        tags = []
-                        
-                        # 1. 从仓库主题获取标签
-                        if "topics" in repo and repo["topics"]:
-                            tags.extend(repo["topics"])
-                        
-                        # 2. 从描述和README中提取关键词作为标签
-                        tags.extend(extract_tags_from_text(type, repo["description"]))
-                        tags.extend(extract_tags_from_text(type, readme_content))
-                        
-                        # 确保至少有基本标签
-                        if not tags:
-                            tags = ["MCP", type]
-                        
-                        # 移除重复项，保留唯一标签
-                        tags = list(set(tags))
-                        
-                        # 将标签列表转换为逗号分隔的字符串
-                        repo_data["tags"] = ",".join(tags)
-                        
-                        # 尝试从README中提取图片URL
-                        img_matches = re.findall(r'!\[.*?\]\((https?://\S+)\)', readme_content)
-                        if img_matches:
-                            repo_data["img_url"] = img_matches[0]  # 使用第一个找到的图片URL
-                        
-                        if repo_data not in all_results:
-                            if repo_data['content'] != '':
-                                print(repo_data['content'])
-                            all_results.append(repo_data)
-                            
-                    except Exception as e:
-                        print(f"❌ 处理仓库 {repo['full_name']} 时出错: {e}")
-                        continue
-                
-                # 等待一小段时间避免触发GitHub的速率限制
-                time.sleep(random.uniform(0.5, 1.5))
+                #time.sleep(random.uniform(0.5, 1.5))
 
                 if len(repositories) < 100:  # 如果当前页数据少于 100 条，说明已经取完了
                     break
