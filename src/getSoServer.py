@@ -11,7 +11,7 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
 }
 QUERY_URL = "http://localhost:3000/api/get-project"
-SUBMIT_URL = "http://localhost:3000/api/submit"
+SUBMIT_URL = "https://mcp.ad/api/submit"
 
 
 # 获取页面内容

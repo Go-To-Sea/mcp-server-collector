@@ -21,7 +21,7 @@ async def main():
 
     async with aiohttp.ClientSession() as session:
         for server in mcp_servers:
-            result = await submit_mcp(session, {'url': server, 'type': type})
+            result = await submit_mcp(session, {'url': server, 'type': 'client'})
             print(f"提交结果: {result}")
 
 if __name__ == "__main__":
