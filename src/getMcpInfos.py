@@ -1,13 +1,9 @@
-import base64
-
-import markdown
-import requests
-import os
-import time
 import datetime
-import uuid
-import re
+import os
 import random
+import time
+
+import requests
 from dotenv import load_dotenv
 
 # 加载 .env 文件
@@ -95,7 +91,7 @@ def get_mcp(type):
                 url = f"https://api.github.com/search/repositories?q=MCP+{type}+created:{start_date}..{end_date}&per_page=100&page={page}"
                 try:
                     response = request_with_retry(url, headers, proxies)
-                    
+
                     # 如果请求失败则跳过
                     if not response:
                         print(f"⚠️ 无法获取仓库列表，跳过时间段: {start_date} 至 {end_date}")
