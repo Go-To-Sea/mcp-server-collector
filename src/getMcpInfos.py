@@ -67,11 +67,12 @@ def get_mcp(type):
     # 倒序遍历每年每月（从最近的时间开始）
     for year in range(END_YEAR, START_YEAR - 1, -1):
         # 确定月份范围
-        month_start = 2
-        month_end = 4
+        month_start = 1
+        month_end = 12
         
         # 如果是当前年份，则只查询到当前月份
         if year == END_YEAR:
+            month_start = current_month
             month_end = current_month
             
         # 倒序遍历月份
