@@ -1,11 +1,10 @@
-import json
-import os
 import asyncio
+
 import aiohttp
 from dotenv import load_dotenv
 
 from src.getMcpInfos import get_mcp
-from src.getSoClient import submit_mcp
+from src.getMcpInfos import submit_mcp
 
 # 加载环境变量
 load_dotenv()

@@ -1,10 +1,13 @@
 import datetime
+import json
 import os
 import random
 import time
 
 import requests
 from dotenv import load_dotenv
+
+SUBMIT_URL = "https://mcp.ad/api/submit"
 
 # 加载 .env 文件
 load_dotenv()
@@ -141,6 +144,29 @@ def get_mcp(type):
                     break
 
     return all_results
+
+async def submit_mcp(session, mcp_server):
+    """
+    异步提交 MCP 服务器数据到指定的 API 端点。
+    """
+    url = SUBMIT_URL
+
+    try:
+        async with session.post(
+            url,
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(mcp_server)
+        ) as response:
+            if response.status == 200:
+                result = await response.json()
+                print(f"提交成功: {result}")
+                return result
+            else:
+                print(f"提交失败: HTTP {response.status}, 数据: {mcp_server}")
+                return None
+    except Exception as e:
+        print(f"提交失败: {str(e)}")
+        return None
 
 
 # 运行
