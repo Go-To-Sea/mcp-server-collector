@@ -8,7 +8,7 @@ from src.getMcpInfos import submit_mcp
 
 # 加载环境变量
 load_dotenv()
-async def main():
+async def submitServer():
     """
     获取 MCP 服务器数据，并按顺序逐个提交到 API。
     """
@@ -24,4 +24,4 @@ async def main():
             print(f"提交结果: {result}")
 
 if __name__ == "__main__":
-    asyncio.run(main())  # 运行异步任务
+    asyncio.run(submitServer())  # 运行异步任务

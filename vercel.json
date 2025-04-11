@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/submitClient",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/submitServer",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
