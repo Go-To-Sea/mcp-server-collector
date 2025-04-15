@@ -1,12 +1,11 @@
 from flask import Flask
-import asyncio
 from src.submitMcpServer import submitServer
 
 app = Flask(__name__)
 
 @app.route('/submit/server', methods=['GET', 'POST'])
-def handler():
-    result = asyncio.run(submitServer())
+async def handler():
+    result = await submitServer()
     return "Server Task Executed", 200
 
 # Vercel要求必须导出名为'app'的WSGI实例

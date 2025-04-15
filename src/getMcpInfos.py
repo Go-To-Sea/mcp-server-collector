@@ -22,7 +22,7 @@ current_month = datetime.datetime.now().month
 
 # 设置查询的年份范围（最近 10 年）
 START_YEAR = current_year - 0  # 10 年前
-END_YEAR = current_year         # 当前年
+END_YEAR = current_year  # 当前年
 
 
 def request_with_retry(url, headers, proxies=None, max_retries=MAX_RETRIES, timeout=REQUEST_TIMEOUT):
@@ -32,28 +32,29 @@ def request_with_retry(url, headers, proxies=None, max_retries=MAX_RETRIES, time
             # 添加轻微随机延迟避免请求过于集中
             if attempt > 0:
                 delay = random.uniform(1, 3) * attempt
-                print(f"⏳ 等待 {delay:.2f} 秒后进行第 {attempt+1} 次重试...")
+                print(f"⏳ 等待 {delay:.2f} 秒后进行第 {attempt + 1} 次重试...")
                 time.sleep(delay)
-                
+
             kwargs = {
                 "headers": headers,
                 "timeout": timeout
             }
             if proxies:
                 kwargs["proxies"] = proxies
-                
+
             response = requests.get(url, **kwargs)
             return response
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-            print(f"⚠️ 连接超时或错误 (尝试 {attempt+1}/{max_retries}): {e}")
+            print(f"⚠️ 连接超时或错误 (尝试 {attempt + 1}/{max_retries}): {e}")
             if attempt == max_retries - 1:
                 print(f"❌ 达到最大重试次数，放弃请求: {url}")
                 raise
         except Exception as e:
             print(f"❌ 未知错误: {e}")
             raise
-    
+
     return None
+
 
 def get_mcp(type):
     all_results = []
@@ -61,7 +62,7 @@ def get_mcp(type):
 
     if GITHUB_TOKEN:
         headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
-    
+
     # 设置代理
     proxies = None
     if not USE_PROXY:
@@ -72,12 +73,12 @@ def get_mcp(type):
         # 确定月份范围
         month_start = 1
         month_end = 12
-        
+
         # 如果是当前年份，则只查询到当前月份
         if year == END_YEAR:
             month_start = current_month
             month_end = current_month
-            
+
         # 倒序遍历月份
         for month in range(month_end, month_start - 1, -1):
             # 计算时间范围（按月）
@@ -100,7 +101,7 @@ def get_mcp(type):
                     if not response:
                         print(f"⚠️ 无法获取仓库列表，跳过时间段: {start_date} 至 {end_date}")
                         break
-                        
+
                 except Exception as e:
                     print(f"❌ 请求仓库列表失败: {e}")
                     # 等待一段时间后再尝试其他月份
@@ -133,7 +134,7 @@ def get_mcp(type):
                 for repo in repositories:
                     all_results.append(repo["html_url"])
 
-                #time.sleep(random.uniform(0.5, 1.5))
+                # time.sleep(random.uniform(0.5, 1.5))
 
                 if len(repositories) < 100:  # 如果当前页数据少于 100 条，说明已经取完了
                     break
@@ -145,6 +146,7 @@ def get_mcp(type):
 
     return all_results
 
+
 async def submit_mcp(session, mcp_server):
     """
     异步提交 MCP 服务器数据到指定的 API 端点。
@@ -153,9 +155,9 @@ async def submit_mcp(session, mcp_server):
 
     try:
         async with session.post(
-            url,
-            headers={"Content-Type": "application/json"},
-            json=mcp_server
+                url,
+                headers={"Content-Type": "application/json"},
+                json=mcp_server
         ) as response:
             if response.status == 200:
                 result = await response.json()
