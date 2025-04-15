@@ -7,7 +7,7 @@
       "config": {
         "runtime": "python3.10",
         "installDependencies": true,
-        "start": "gunicorn -b :$port app:app"
+        "start": "gunicorn -b :$port index:app"
       }
     },
     {
@@ -16,7 +16,7 @@
       "config": {
         "runtime": "python3.10",
         "installDependencies": true,
-        "start": "gunicorn -b :$port app:app"
+        "start": "gunicorn -b :$port index:app"
       }
     }
   ],
