@@ -1,8 +1,6 @@
 import asyncio
-
 import aiohttp
 from dotenv import load_dotenv
-
 from src.getMcpInfos import get_mcp
 from src.getMcpInfos import submit_mcp
 

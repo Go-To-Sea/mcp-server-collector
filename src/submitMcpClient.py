@@ -1,6 +1,6 @@
 import aiohttp
+import asyncio
 from dotenv import load_dotenv
-
 from src.getMcpInfos import get_mcp
 from src.getMcpInfos import submit_mcp
 
@@ -22,5 +22,4 @@ async def submitClient():
             print(f"提交结果: {result}")
 
 if __name__ == "__main__":
-    import asyncio
     asyncio.run(submitClient())  # 运行异步任务
