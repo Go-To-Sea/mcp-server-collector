@@ -1,11 +1,12 @@
 from flask import Flask
+import asyncio
 from src.submitMcpClient import submitClient
 
 app = Flask(__name__)
 
 @app.route('/submit/client', methods=['GET', 'POST'])
 def handler():
-    result = submitClient()
+    result = asyncio.run(submitClient())
     return "Client Task Executed", 200
 
 # Vercel要求必须导出名为'app'的WSGI实例

@@ -145,20 +145,20 @@ def get_mcp(type):
 
     return all_results
 
-def submit_mcp(session, mcp_server):
+async def submit_mcp(session, mcp_server):
     """
     异步提交 MCP 服务器数据到指定的 API 端点。
     """
     url = SUBMIT_URL
 
     try:
-        with session.post(
+        async with session.post(
             url,
             headers={"Content-Type": "application/json"},
-            data=json.dumps(mcp_server)
+            json=mcp_server
         ) as response:
             if response.status == 200:
-                result = response.json()
+                result = await response.json()
                 print(f"提交成功: {result}")
                 return result
             else:

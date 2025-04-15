@@ -6,7 +6,7 @@ from src.getMcpInfos import submit_mcp
 
 # 加载环境变量
 load_dotenv()
-def submitClient():
+async def submitClient():
     """
     获取 MCP 服务器数据，并按顺序逐个提交到 API。
     """
@@ -16,10 +16,11 @@ def submitClient():
         print("未找到 MCP 客户端，任务终止。")
         return
 
-    with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession() as session:
         for server in mcp_servers:
-            result = submit_mcp(session, {'url': server, 'type': 'client'})
+            result = await submit_mcp(session, {'url': server, 'type': 'client'})
             print(f"提交结果: {result}")
 
 if __name__ == "__main__":
-    submitClient()  # 运行异步任务
+    import asyncio
+    asyncio.run(submitClient())  # 运行异步任务
